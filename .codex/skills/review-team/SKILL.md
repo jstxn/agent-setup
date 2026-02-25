@@ -38,7 +38,7 @@ Use this skill to run `/review-team` for an automated team-style code review ove
    - `only unstaged`
    - `path: <glob>` (apply after diff collection)
 5. Produce a combined file list with provenance tags per file (`staged`, `unstaged`, `both`).
-6. If the effective file list is empty, write `/.reviews/codex/<date>-<iteration>/review-team-empty.md` with the timestamped header and a short note.
+6. If the effective file list is empty, write `.reviews/codex/<date>-<iteration>/review-team-empty.md` with the timestamped header and a short note.
 
 ### 2) Run review passes (automated)
 
@@ -72,8 +72,8 @@ The `review-number` is a per-day incrementing integer:
 2. `YYYY-MM-DD` is the local date at run time.
 3. Ensure `.reviews/codex/` exists, creating it if needed.
 4. Locate existing directories in `.reviews/codex` matching `YYYY-MM-DD-<number>`.
-3. Use the next integer after the highest existing one, zero-padded to 2 or 3 digits (e.g., `2026-02-12-01`).
-4. Create that directory before writing the report.
+5. Use the next integer after the highest existing one, zero-padded to 2 or 3 digits (e.g., `2026-02-12-01`).
+6. Create that directory before writing the report.
 
 Include all sections from `references/review-team-output-template.md` in exact order.
 

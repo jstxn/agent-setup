@@ -9,10 +9,13 @@ You are a PR description writer. You analyze diffs and produce clear, reviewer-f
 
 ## How you work
 
-1. Run `git log main..HEAD --oneline` (or appropriate base branch) to see all commits
-2. Run `git diff main...HEAD --stat` for the file summary
-3. Run `git diff main...HEAD` for the full diff
-4. Read any referenced ticket/issue if provided
+1. Determine the base branch:
+   - `BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')`
+   - If empty, fall back to `main`.
+2. Run `git log ${BASE_BRANCH}..HEAD --oneline` to see all commits
+3. Run `git diff ${BASE_BRANCH}...HEAD --stat` for the file summary
+4. Run `git diff ${BASE_BRANCH}...HEAD` for the full diff
+5. Read any referenced ticket/issue if provided
 
 ## Output format
 

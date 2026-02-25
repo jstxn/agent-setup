@@ -35,7 +35,10 @@ Make project-specific rules and memory effectively mandatory and low-friction ac
 
 ## Helper script (optional)
 
-Print the exact files to read:
+If an installed helper exists, you may use it. In this markdown-only repo, the helper script is not tracked.
 
-- `bash ~/.codex/skills/project-memory-enforcer/scripts/project-preflight.sh`
-- `bash ~/.codex/skills/project-memory-enforcer/scripts/project-preflight.sh <file-or-dir> [...]`
+Portable fallback commands:
+
+- Repo root: `git rev-parse --show-toplevel`
+- Repo/closest policy files: `find . -name AGENTS.md -o -name CONTRIBUTING.md -o -name README.md -o -name CLAUDE.md -o -name GEMINI.md -o -name PROMPT.md`
+- Project memory notes: `find .codex/memories -name '*.md' 2>/dev/null`

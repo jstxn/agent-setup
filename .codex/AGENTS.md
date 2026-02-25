@@ -1,7 +1,7 @@
 # Codex Local Agent Policy
 
-version: v5
-last_updated: 2026-02-24
+version: v7
+last_updated: 2026-02-25
 owner: ExampleUser
 applies_to: Codex runtime behavior in `/Users/<user>/.codex`
 
@@ -59,11 +59,14 @@ When reporting findings, include: severity, file path + line reference, concrete
 3. If sandbox restrictions block required work, request escalation with clear justification.
 4. If a named skill is missing/unreadable, state the gap and use the best fallback without blocking.
 5. Keep handoffs concise, specific, and actionable.
-6. For Obsidian note retrieval/referencing, use `obsidian` CLI and target the vault relevant to the active project (`workspace-beta`, `workspace-alpha`, or `{PROJECT_NAME}`).
-7. Whenever creating a plan, including while in Plan mode, save that planning artifact in the relevant vault under `plans/`.
+6. Do NOT use the `obsidian` binary — it is the Electron GUI app and can hang in non-interactive shells. Read and write vault notes as plain Markdown files on disk.
+7. Resolve vault roots from local configuration. Use project-specific roots when configured, otherwise use the default local vault root. For plan artifacts (including Plan mode), write a `.md` file under the relevant `plans/` directory and ensure parent directories exist with `mkdir -p`.
+8. During agentic work, proactively capture reusable project knowledge. At session start and during planning, list available knowledge-note filenames first and read only notes relevant to the current task. Do NOT read everything.
 
 ## Change Log
 
+- `v7` (2026-02-25): added knowledge-capture reference loop guidance (list first, read selectively, do not load all notes).
+- `v6` (2026-02-25): replaced Obsidian CLI guidance with direct filesystem vault operations.
 - `v5` (2026-02-24): added required Obsidian plan capture to the relevant vault `plans/` folder and aligned vault selection with active project context.
 - `v4` (2026-02-24): added Obsidian CLI default for the `workspace-alpha` vault.
 - `v3` (2026-02-16): removed sections duplicated by global `~/AGENTS.md` (safety, communication, fallback). Consolidated tooling/communication/fallback into Codex-Specific Defaults.

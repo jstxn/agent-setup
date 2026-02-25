@@ -6,12 +6,12 @@ description: "Use when the task requires automating a real browser from the term
 
 # Playwright CLI Skill
 
-Drive a real browser from the terminal using `playwright-cli`. Prefer the bundled wrapper script so the CLI works even when it is not globally installed.
+Drive a real browser from the terminal using `playwright-cli`. Prefer the installed wrapper script when available, and fall back to `npx` when it is not.
 Treat this skill as CLI-first automation. Do not pivot to `@playwright/test` unless the user explicitly asks for test files.
 
 ## Prerequisite check (required)
 
-Before proposing commands, check whether `npx` is available (the wrapper depends on it):
+Before proposing commands, check whether `npx` is available:
 
 ```bash
 command -v npx >/dev/null 2>&1
@@ -29,28 +29,35 @@ npm install -g @playwright/mcp@latest
 playwright-cli --help
 ```
 
-Once `npx` is present, proceed with the wrapper script. A global install of `playwright-cli` is optional.
+Once `npx` is present, proceed. A global install of `playwright-cli` is optional.
 
-## Skill path (set once)
+## Command setup (set once)
 
 ```bash
 export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
+pwcli() {
+  local script="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
+  if [ -x "$script" ]; then
+    "$script" "$@"
+  else
+    npx --yes --package @playwright/mcp playwright-cli "$@"
+  fi
+}
 ```
 
-User-scoped skills install under `$CODEX_HOME/skills` (default: `~/.codex/skills`).
+This keeps commands working in this markdown-only repo even when helper files are not tracked locally.
 
 ## Quick start
 
-Use the wrapper script:
+Use `pwcli`:
 
 ```bash
-"$PWCLI" open https://playwright.dev --headed
-"$PWCLI" snapshot
-"$PWCLI" click e15
-"$PWCLI" type "Playwright"
-"$PWCLI" press Enter
-"$PWCLI" screenshot
+pwcli open https://playwright.dev --headed
+pwcli snapshot
+pwcli click e15
+pwcli type "Playwright"
+pwcli press Enter
+pwcli screenshot
 ```
 
 If the user prefers a global install, this is also valid:
@@ -71,10 +78,10 @@ playwright-cli --help
 Minimal loop:
 
 ```bash
-"$PWCLI" open https://example.com
-"$PWCLI" snapshot
-"$PWCLI" click e3
-"$PWCLI" snapshot
+pwcli open https://example.com
+pwcli snapshot
+pwcli click e3
+pwcli snapshot
 ```
 
 ## When to snapshot again
@@ -93,48 +100,48 @@ Refs can go stale. When a command fails due to a missing ref, snapshot again.
 ### Form fill and submit
 
 ```bash
-"$PWCLI" open https://example.com/form
-"$PWCLI" snapshot
-"$PWCLI" fill e1 "user@example.com"
-"$PWCLI" fill e2 "password123"
-"$PWCLI" click e3
-"$PWCLI" snapshot
+pwcli open https://example.com/form
+pwcli snapshot
+pwcli fill e1 "user@example.com"
+pwcli fill e2 "password123"
+pwcli click e3
+pwcli snapshot
 ```
 
 ### Debug a UI flow with traces
 
 ```bash
-"$PWCLI" open https://example.com --headed
-"$PWCLI" tracing-start
+pwcli open https://example.com --headed
+pwcli tracing-start
 # ...interactions...
-"$PWCLI" tracing-stop
+pwcli tracing-stop
 ```
 
 ### Multi-tab work
 
 ```bash
-"$PWCLI" tab-new https://example.com
-"$PWCLI" tab-list
-"$PWCLI" tab-select 0
-"$PWCLI" snapshot
+pwcli tab-new https://example.com
+pwcli tab-list
+pwcli tab-select 0
+pwcli snapshot
 ```
 
-## Wrapper script
+## Optional Wrapper Script
 
-The wrapper script uses `npx --package @playwright/mcp playwright-cli` so the CLI can run without a global install:
+If an installed wrapper exists, `pwcli` will use it automatically:
 
 ```bash
-"$PWCLI" --help
+pwcli --help
 ```
 
-Prefer the wrapper unless the repository already standardizes on a global install.
+Otherwise, `pwcli` transparently falls back to `npx --yes --package @playwright/mcp playwright-cli`.
 
 ## References
 
-Open only what you need:
+Use built-in command help:
 
-- CLI command reference: `references/cli.md`
-- Practical workflows and troubleshooting: `references/workflows.md`
+- `pwcli --help`
+- `pwcli <command> --help`
 
 ## Guardrails
 
