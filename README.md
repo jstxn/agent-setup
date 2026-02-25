@@ -57,6 +57,15 @@ Codex skills (recommended):
 3. Run structured review (`review-team`) and close findings (`fix-latest`) before handoff.
 4. Capture durable knowledge for future sessions and keep docs aligned with runtime behavior.
 
+## Strengths of the Obsidian Read-Write Loop
+
+- Compounding context: each session writes reusable patterns/issues/architecture notes, so future sessions start from prior learning instead of from scratch.
+- Faster planning: agents can scan note filenames first and pull only relevant knowledge, reducing repeated discovery work.
+- Controlled context load: selective reads ("do not read everything") keep token usage proportional to the task, not vault size.
+- Better multi-agent consistency: main agent and subagents can align on the same stored conventions before deep exploration.
+- Durable audit trail: plain Markdown notes make decisions and discoveries easy to inspect, diff, and refine over time.
+- Tool resilience: direct filesystem read/write keeps the loop reliable even when GUI-specific tools are unavailable.
+
 ## Obfuscation Notes
 
 Some names are intentionally replaced with placeholders such as:
