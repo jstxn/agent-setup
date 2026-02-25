@@ -29,13 +29,13 @@ If uncertainty is high, the planning segment can temporarily expand and implemen
 - **Avoid duplication.** Consolidate repeated logic into shared helpers when lower risk than copying.
 - **Match existing style and structure.** Follow established naming, placement, typing, and error-handling patterns.
 
-## Obsidian CLI Default
+## Obsidian Filesystem Default
 
-- For note retrieval/referencing tasks, use Obsidian CLI via `obsidian`.
-- Prefer deterministic opens with `obsidian "obsidian://open?vault=<vault>&file=<relative-path>"`.
-- For planning artifacts, including anytime a plan is created or Plan mode is used, always place the note in the relevant Obsidian vault under `plans/`.
-- Vault selection for plans: `workspace-beta` work uses the `workspace-beta` vault, `workspace-alpha` work uses the `workspace-alpha` vault, and other work uses a vault named for `{PROJECT_NAME}` when available.
-- Always run `obsidian` CLI commands outside the sandbox to avoid vault and URI access issues. If outside-sandbox execution is unavailable, stop and report the blocker.
+- Do not use the `obsidian` binary. It launches the Electron GUI app and can hang in sandboxed shells.
+- Read and write notes directly as Markdown files on disk.
+- Vault paths: `g2i` -> `/Users/justen/Development/g2i/`, `upwage` -> `/Users/justen/Development/upwage/`, other work -> `/Users/justen/Obsidian/Main/`.
+- For planning artifacts, including anytime a plan is created or Plan mode is used, always place a `.md` note in the relevant vault under `plans/`.
+- Ensure the plans directory exists first using `mkdir -p`.
 
 ## Session Completion
 

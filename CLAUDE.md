@@ -3,12 +3,13 @@
 - Never include claude as a co-author
 - Use explore agents for non-trivial tasks that require codebase context gathering
 
-## Obsidian CLI
+## Obsidian Filesystem
 
-- Use the `obsidian` CLI for note retrieval and referencing tasks.
-- Prefer deterministic opens: `obsidian "obsidian://open?vault=<vault>&file=<relative-path>"`.
-- When creating plans (including Plan mode), save the note to the relevant Obsidian vault under `plans/`.
-- Vault routing: `workspace-beta` projects -> `workspace-beta` vault, `workspace-alpha` projects -> `workspace-alpha` vault, others -> vault matching `{PROJECT_NAME}`.
+- Do not use the `obsidian` binary. It launches the Electron GUI app and can hang in sandboxed shells.
+- Read and write notes directly as Markdown files on disk.
+- Vault routing: `g2i` -> `/Users/justen/Development/g2i/`, `upwage` -> `/Users/justen/Development/upwage/`, others -> `/Users/justen/Obsidian/Main/`.
+- When creating plans (including Plan mode), save a `.md` note to the relevant vault under `plans/`.
+- Ensure the plans directory exists first with `mkdir -p`.
 
 # Shared Context
 On every session start, call context_boot(project: "your-project")
