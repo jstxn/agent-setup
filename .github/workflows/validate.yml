@@ -1,0 +1,24 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh tests/*.sh
+      - name: Validate catalogs
+        run: ./scripts/validate-catalog.sh
+      - name: Leak scan (strict)
+        run: ./scripts/scan-leaks.sh --strict
+      - name: Test export
+        run: ./tests/test-export.sh
+      - name: Test redaction
+        run: ./tests/test-redaction.sh
+      - name: Test selective install
+        run: ./tests/test-install-selective.sh

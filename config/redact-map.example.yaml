@@ -1,0 +1,11 @@
+mappings:
+  - from: "workspace-private-a"
+    to: "workspace-alpha"
+  - from: "workspace-private-b"
+    to: "workspace-beta"
+  - from: "workspace-private-c"
+    to: "workspace-gamma"
+  - from: "BrandName"
+    to: "ExampleBrand"
+  - from: "TeamName"
+    to: "Team"

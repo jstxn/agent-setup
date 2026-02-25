@@ -1,0 +1,28 @@
+subagents:
+  - id: context-researcher
+    spec: subagents/specs/context-researcher.md
+    adapters:
+      claude: subagents/adapters/claude/researcher.md
+      codex: subagents/adapters/codex/context-researcher.md
+    tools: [read, grep, glob, bash, web]
+    model_hints:
+      default: medium-reasoning
+    intended_use: Read-only exploration and architecture/context tracing.
+  - id: change-reviewer
+    spec: subagents/specs/change-reviewer.md
+    adapters:
+      claude: subagents/adapters/claude/reviewer.md
+      codex: subagents/adapters/codex/change-reviewer.md
+    tools: [read, grep, glob, bash]
+    model_hints:
+      default: medium-reasoning
+    intended_use: Post-change correctness and consistency review.
+  - id: pr-drafter
+    spec: subagents/specs/pr-drafter.md
+    adapters:
+      claude: subagents/adapters/claude/pr-writer.md
+      codex: subagents/adapters/codex/pr-drafter.md
+    tools: [bash, read]
+    model_hints:
+      default: fast
+    intended_use: Draft concise, reviewer-friendly PR title/body/test plan.

@@ -1,0 +1,18 @@
+workflows:
+  - id: private-to-public-export
+    summary: Sanitize private workflow files into public-safe artifacts.
+    inputs: [private-policy-files, redact-map, denylist]
+    outputs: [public-policy-files, skill-docs, adapter-docs]
+    steps:
+      - Run export-public.sh
+      - Sanitize copied files
+      - Run leak scan in strict mode
+      - Validate catalogs and tests
+  - id: selective-bootstrap
+    summary: Install chosen templates into local runtime directories.
+    inputs: [repo-files, target-runtime, destination-path]
+    outputs: [installed-policy-and-adapter-files]
+    steps:
+      - Run install-selective.sh in dry-run mode
+      - Run install-selective.sh in apply mode with backups
+      - Verify destination files
