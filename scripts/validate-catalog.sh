@@ -4,6 +4,36 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+have_rg() {
+  command -v rg >/dev/null 2>&1
+}
+
+match_lines() {
+  local pattern="$1"
+  local file="$2"
+  if have_rg; then
+    rg -N "$pattern" "$file" || true
+  else
+    grep -E "$pattern" "$file" || true
+  fi
+}
+
+has_match() {
+  local pattern="$1"
+  local file="$2"
+  if have_rg; then
+    rg -q "$pattern" "$file"
+  else
+    grep -Eq "$pattern" "$file"
+  fi
+}
+
+count_matches() {
+  local pattern="$1"
+  local file="$2"
+  match_lines "$pattern" "$file" | wc -l | tr -d ' '
+}
+
 validate_json() {
   local file="$1"
   python3 - <<PY
@@ -17,7 +47,7 @@ PY
 unique_ids() {
   local file="$1"
   local dupes
-  dupes=$(rg '^[[:space:]]*-[[:space:]]*id:' "$file" | sed -E 's/^[[:space:]]*-[[:space:]]*id:[[:space:]]*//' | sort | uniq -d || true)
+  dupes=$(match_lines '^[[:space:]]*-[[:space:]]*id:' "$file" | sed -E 's/^[[:space:]]*-[[:space:]]*id:[[:space:]]*//' | sort | uniq -d || true)
   if [[ -n "$dupes" ]]; then
     echo "duplicate ids in $file:" >&2
     echo "$dupes" >&2
@@ -31,9 +61,9 @@ require_key_count() {
   local items="$3"
   local count
   if [[ "$key" == "id" ]]; then
-    count=$(rg -N "^[[:space:]]*-[[:space:]]*id:" "$file" | wc -l | tr -d ' ')
+    count=$(count_matches "^[[:space:]]*-[[:space:]]*id:" "$file")
   else
-    count=$( (rg -N "^[[:space:]]*${key}:" "$file" || true) | wc -l | tr -d ' ')
+    count=$(count_matches "^[[:space:]]*${key}:" "$file")
   fi
   if [[ "$count" -lt "$items" ]]; then
     echo "key '$key' missing for one or more items in $file" >&2
@@ -47,10 +77,10 @@ validate_manifest() {
   local top_key="$1"
   shift
 
-  rg -q "^${top_key}:" "$file" || { echo "missing top key '${top_key}' in $file" >&2; return 1; }
+  has_match "^${top_key}:" "$file" || { echo "missing top key '${top_key}' in $file" >&2; return 1; }
 
   local items
-  items=$(rg -N '^[[:space:]]*-[[:space:]]*id:' "$file" | wc -l | tr -d ' ')
+  items=$(count_matches '^[[:space:]]*-[[:space:]]*id:' "$file")
   if [[ "$items" -eq 0 ]]; then
     echo "no items found in $file" >&2
     return 1
