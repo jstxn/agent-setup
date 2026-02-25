@@ -7,7 +7,7 @@
 
 - Do not use the `obsidian` binary. It launches the Electron GUI app and can hang in sandboxed shells.
 - Read and write notes directly as Markdown files on disk.
-- Vault routing: `g2i` -> `/Users/justen/Development/g2i/`, `upwage` -> `/Users/justen/Development/upwage/`, others -> `/Users/justen/Obsidian/Main/`.
+- Vault routing: use the project-specific vault path from local configuration, otherwise fall back to the default local vault path.
 - When creating plans (including Plan mode), save a `.md` note to the relevant vault under `plans/`.
 - Ensure the plans directory exists first with `mkdir -p`.
 

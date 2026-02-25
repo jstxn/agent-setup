@@ -33,7 +33,7 @@ If uncertainty is high, the planning segment can temporarily expand and implemen
 
 - Do not use the `obsidian` binary. It launches the Electron GUI app and can hang in sandboxed shells.
 - Read and write notes directly as Markdown files on disk.
-- Vault paths: `g2i` -> `/Users/justen/Development/g2i/`, `upwage` -> `/Users/justen/Development/upwage/`, other work -> `/Users/justen/Obsidian/Main/`.
+- Use project-specific vault paths from local configuration; if no project vault is configured, use the default local vault path.
 - For planning artifacts, including anytime a plan is created or Plan mode is used, always place a `.md` note in the relevant vault under `plans/`.
 - Ensure the plans directory exists first using `mkdir -p`.
 
