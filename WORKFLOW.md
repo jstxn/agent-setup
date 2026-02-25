@@ -20,6 +20,7 @@
 - Write rules for yourself that prevent the same mistake.
 - Ruthlessly iterate on these lessons until mistake rate drops.
 - Review lessons at session start for relevant project.
+- Review captured vault knowledge at session start for the relevant project: list note filenames first, then read only notes relevant to the current task.
 
 ## 4. Verification Before Done
 
