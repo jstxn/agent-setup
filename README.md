@@ -66,6 +66,107 @@ Codex skills (recommended):
 - Durable audit trail: plain Markdown notes make decisions and discoveries easy to inspect, diff, and refine over time.
 - Tool resilience: direct filesystem read/write keeps the loop reliable even when GUI-specific tools are unavailable.
 
+## Invisible Automatic Context Sync (Flow Example)
+
+Goal: keep note indexes current with near-zero user involvement.
+
+### 1) Canonical sync command
+
+Add a single sync command (example: `~/bin/context-sync`) as the source of truth for index updates.
+
+Expected behavior:
+
+- Uses vault roots like `<home>/Development/workspace-alpha/context`, `<home>/Development/workspace-beta/context`, and `<home>/Obsidian/Main/context`.
+- Supports:
+  - `--all` (sync every known root),
+  - `--path <changed-file>` (targeted sync),
+  - `--cwd <dir>` (infer relevant root),
+  - `--quiet` (silent automation mode).
+- Ensures:
+  - root `INDEX.md`,
+  - project `INDEX.md`,
+  - required artifact folders,
+  - sorted note links by recency.
+
+### 2) Claude hook bridge
+
+Add a small hook script (example: `~/.claude/hooks/context-sync-hook.sh`) that reads hook JSON from stdin and triggers sync:
+
+- `PostToolUse` for write/edit tools (`Write`, `Edit`, `MultiEdit`, `NotebookEdit`) -> run targeted sync using changed file path.
+- `SessionEnd` and `Stop` -> run sync for the active workspace.
+- Optional `Bash` fallback: if command text touches `/context/*.md`, run sync.
+
+### 3) Claude settings wiring
+
+Wire the hook in `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/context-sync-hook.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/context-sync-hook.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/context-sync-hook.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 4) Background safety net (tool-agnostic)
+
+Add a lightweight scheduler so indexes self-heal even when a path bypasses hooks.
+
+macOS LaunchAgent example:
+
+- `Label`: `com.user.context-sync`
+- `ProgramArguments`: `~/bin/context-sync --quiet --all`
+- `RunAtLoad`: `true`
+- `StartInterval`: `120` (seconds)
+- Set `PATH` in agent env so `python3`/dependencies resolve in non-interactive runs.
+
+### 5) Runtime flow
+
+1. Agent writes a note under `context/<project>/<artifact-type>/...`.
+2. Hook fires and calls `context-sync` automatically.
+3. Root and project `INDEX.md` files update.
+4. Periodic background run reconciles any missed updates.
+5. Next session reads `context/INDEX.md` then `context/<project>/INDEX.md` before note bodies.
+
+### 6) Fallback command
+
+If automation is disabled or being debugged:
+
+```bash
+context-sync --cwd "$PWD"
+```
+
 ## Obfuscation Notes
 
 Some names are intentionally replaced with placeholders such as:
