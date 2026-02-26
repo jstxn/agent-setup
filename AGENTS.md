@@ -118,6 +118,7 @@ Classify the session before handoff:
 
 - **Analysis-only session:** Summarize findings, risks, assumptions, and next steps. Do not force commits or pushes.
 - **Code-change session:** Run quality gates -> commit with clear message -> hand off with concise context.
+- **Completed implementation task(s):** Review the implementation before handoff and include a confidence score (0-100%) with a brief explanation of why that score is appropriate.
 
 ### Quality Gates (Preferred Order)
 

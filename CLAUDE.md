@@ -3,6 +3,7 @@
 - Never include claude as a co-author
 - Use explore agents for non-trivial tasks that require codebase context gathering
 - Proactively capture and reference project knowledge during work. See `Knowledge Capture` and `Referencing Captured Knowledge` in `AGENTS.md`.
+- After completing a task or task set, review the implementation and return a confidence score (0-100%) with a short explanation of the reasoning behind that score.
 
 ## Obsidian Vault Operations
 
